@@ -36,7 +36,10 @@ func (t Training) distance() float64 {
 func (t Training) meanSpeed() float64 {
 	// вставьте ваш код ниже
 	dist := t.distance()
-	timeToH := t.Duration.Hours() / MinInHours
+	timeToH := t.Duration.Hours()
+	if timeToH == 0 {
+		return 0
+	}
 	meanSpeed := dist / timeToH
 	return meanSpeed
 }
@@ -108,7 +111,7 @@ type Running struct {
 // Это переопределенный метод Calories() из Training.
 func (r Running) Calories() float64 {
 	// вставьте ваш код ниже
-	calories := (CaloriesMeanSpeedMultiplier*r.meanSpeed() + CaloriesMeanSpeedShift) * r.Weight / MInKm * r.Duration.Hours() / MinInHours
+	calories := (CaloriesMeanSpeedMultiplier*r.meanSpeed() + CaloriesMeanSpeedShift) * r.Weight / MInKm * r.Duration.Hours() * MinInHours
 	return calories
 }
 
@@ -147,6 +150,9 @@ type Walking struct {
 // Это переопределенный метод Calories() из Training.
 func (w Walking) Calories() float64 {
 	// вставьте ваш код ниже
+	if w.Height == 0 {
+		return 0
+	}
 	averageSpeed := w.meanSpeed() * KmHInMsec
 	calories := ((CaloriesWeightMultiplier*w.Weight + (math.Pow(averageSpeed, 2))/w.Height/CmInM) * CaloriesSpeedHeightMultiplier * w.Weight) * w.Duration.Hours() * MinInHours
 	return calories
